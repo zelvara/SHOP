@@ -4,10 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Zelvara - Payment</title>
-  
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  
   <style>
     body { 
       background-color: #fefdfe; 
@@ -61,10 +59,8 @@
   <div class="container">
     <div class="payment-container">
       <h2 class="title">Payment & Delivery Details</h2>
-
       <!-- Order Summary Section -->
       <div id="orderSummary" class="order-summary">Loading...</div>
-
       <!-- Delivery Section -->
       <h4 class="section-title">Delivery Address</h4>
       <form id="deliveryForm" class="delivery-form">
@@ -73,98 +69,103 @@
         <input type="text" id="city" class="form-control" placeholder="City" required>
         <input type="text" id="pincode" class="form-control" placeholder="Pincode" required maxlength="6">
       </form>
-
       <!-- UPI Payment Section -->
       <h4 class="section-title">Pay via UPI</h4>
       <div class="qr-section">
         <p><strong>UPI ID:</strong> <span id="upiID">zelvara@upi</span></p>
         <div class="qr-code" id="qrcode"></div>
       </div>
-
       <!-- Payment Form -->
       <h4 class="section-title">Enter UTR (Transaction ID)</h4>
       <input type="text" class="form-control" id="utr" placeholder="Enter 12-digit UTR" required>
       <button type="button" class="btn btn-primary w-100 btn-pay" onclick="submitOrder()">Submit Payment</button>
-
       <p class="estimated-delivery">Estimated Delivery: 4-5 days after order confirmation.</p>
     </div>
   </div>
-
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
   <script>
     function loadOrderSummary() {
+      const params = new URLSearchParams(window.location.search);
+      const productIdFromUrl = params.get("id");
       let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      
+      if (productIdFromUrl) {
+        const filteredItems = cart.filter(item => item.id === productIdFromUrl);
+        if (filteredItems.length > 0) {
+          cart = [filteredItems[filteredItems.length - 1]];
+        }
+      }
+      
       let total = 0;
       let summaryHtml = '<h4 class="section-title">Order Summary</h4><ul>';
-
       if (cart.length === 0) {
         document.getElementById("orderSummary").innerHTML = "<p>No items in your order.</p>";
         document.querySelector(".btn-pay").style.display = "none";
         return;
       }
-
+      
       cart.forEach(item => {
         total += parseFloat(item.price);
         summaryHtml += `<li>${item.name} - ₹${item.price} (Size: ${item.size})</li>`;
       });
-
+      
       summaryHtml += `</ul><p><strong>Total Amount: ₹${total.toFixed(2)}</strong></p>`;
       document.getElementById("orderSummary").innerHTML = summaryHtml;
       document.querySelector(".btn-pay").style.display = total > 0 ? "block" : "none";
-
+      
       const upiUrl = `upi://pay?pa=zelvara@upi&pn=Zelvara Store&am=${total.toFixed(2)}&cu=INR`;
       new QRCode(document.getElementById("qrcode"), upiUrl);
     }
-
+    
     function submitOrder() {
-      let cart = JSON.parse(localStorage.getItem("cart")) || [];
-      let deliveryAddress = document.getElementById("fullAddress").value;
-      let state = document.getElementById("state").value;
-      let city = document.getElementById("city").value;
-      let pincode = document.getElementById("pincode").value;
-      let utr = document.getElementById("utr").value.trim();
-
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const deliveryAddress = document.getElementById("fullAddress").value;
+      const state = document.getElementById("state").value;
+      const city = document.getElementById("city").value;
+      const pincode = document.getElementById("pincode").value;
+      const utr = document.getElementById("utr").value.trim();
+      
       if (cart.length === 0) {
         alert("No items added to the cart!");
         return;
       }
-
+      
       if (!deliveryAddress.trim() || !state.trim() || !city.trim() || !pincode.trim()) {
         alert("Please fill in all delivery details!");
         return;
       }
-
+      
       if (!/^\d{12}$/.test(utr)) {
         alert("Invalid UTR! Please enter a 12-digit transaction ID.");
         return;
       }
-
-      let orderData = {
+      
+      const totalAmountMatch = document.getElementById("orderSummary").innerHTML.match(/Total Amount: ₹([\d.]+)/);
+      const totalAmount = totalAmountMatch ? totalAmountMatch[1] : "0.00";
+      
+      const orderData = {
         timestamp: new Date().toLocaleString(),
         products: cart,
         address: deliveryAddress,
         state: state,
         city: city,
         pincode: pincode,
-        total: document.getElementById("orderSummary").innerHTML.match(/Total Amount: ₹([\d.]+)/)[1],
+        total: totalAmount,
         utr: utr,
         status: "Processing"
       };
-
+      
       let orders = JSON.parse(localStorage.getItem("orders")) || [];
       orders.push(orderData);
       localStorage.setItem("orders", JSON.stringify(orders));
-
+      
       localStorage.removeItem("cart");
-
       alert("Your order has been confirmed!");
-
       window.location.href = "processing.html";
     }
-
+    
     window.onload = loadOrderSummary;
   </script>
 </body>
 </html>
-

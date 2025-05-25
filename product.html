@@ -11,7 +11,7 @@
     body {
       margin: 0;
       min-height: 800px;
-      display: center;
+      display: flex-start;
       justify-content: center;
       align-items: center;
       background-color: #fefdfe;
@@ -40,17 +40,15 @@
     .btn {
       margin: 5px;
     }
-
-    /* 🎯 Center arrows over the image */
+    /* Center arrows over the image */
     .carousel-control-prev,
     .carousel-control-next {
       top: 100%;
       transform: translateY(-50%);
     }
-
-    /* 🎯 Position the dots (carousel indicators) at the bottom of the image */
+    /* Position the dots (carousel indicators) at the bottom of the image */
     .carousel-indicators {
-      bottom: -280px; /* Adjust the value if needed */
+      bottom: -280px;
     }
   </style>
 </head>
@@ -59,66 +57,69 @@
     <button onclick="location.href='index.html'" class="btn btn-secondary back-button">Back to Home</button>
     <div id="productDetailsContainer">Loading product details...</div>
   </div>
-
+  
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       const params = new URLSearchParams(window.location.search);
       const productId = params.get("id");
-
+      console.log("Product ID:", productId);
+      
       // Sample product data
       const products = {
-  "1": {
-    "name": "Classic Denim Jacket",
-    "price": "499.99",
-    "description": "A timeless denim jacket perfect for every occasion. Made with high-quality denim and excellent stitching.",
-    "images": [
-      "images/Classic Denim Jacket/red02.jpg",
-      "images/Classic Denim Jacket/red03.jpg",
-      "images/Classic Denim Jacket/red04.jpg",
-      "images/Classic Denim Jacket/red05.jpg",
-      "images/Classic Denim Jacket/red06.jpg"
-    ],
-    "sizes": ["S", "M", "XS", "L", "XL", "2XL"]
-  },
-  "2": {
-    "name": "Women's White & Black All Over Printed Dress",
-    "price": "699.99",
-    "description": "Flowy, elegant, and perfect for warm days. This dress offers both style and comfort.",
-    "images": [
-      "images/Summer Maxi Dress/dress02.jpg",
-      "images/Summer Maxi Dress/dress03.jpg",
-      "images/Summer Maxi Dress/dress04.jpg",
-      "images/Summer Maxi Dress/dress05.jpg",
-      "images/Summer Maxi Dress/dress06.jpg"
-    ],
-    "sizes": ["S", "M", "XS", "L", "XL", "2XL"]
-  },
-  "3": {
-    "name": "Leather Sneakers",
-    "price": "899.99",
-    "description": "Sleek and stylish leather sneakers designed for comfort and durability.",
-    "images": [
-      "images/Black/black02.jpg",
-      "images/Black/black03.jpg",
-      "images/Black/black04.jpg",
-      "images/Black/black05.jpg",
-      "images/Black/black06.jpg",
-      "images/Black/black07.jpg"
-    ],
-    "sizes": ["S", "M", "XS", "L", "XL", "2XL"]
-  }
-};
-
+        "1": {
+          "name": "Classic Denim Jacket",
+          "price": "499.99",
+          "description": "A timeless denim jacket perfect for every occasion. Made with high-quality denim and excellent stitching.",
+          "images": [
+              "images/Classic Denim Jacket/red02.jpg",
+              "images/Classic Denim Jacket/red03.jpg",
+              "images/Classic Denim Jacket/red04.jpg",
+              "images/Classic Denim Jacket/red05.jpg",
+              "images/Classic Denim Jacket/red06.jpg"
+          ],
+          "sizes": ["S", "M", "XS", "L", "XL", "2XL"]
+        },
+        "2": {
+          "name": "Women's White & Black All Over Printed Dress",
+          "price": "699.99",
+          "description": "Flowy, elegant, and perfect for warm days. This dress offers both style and comfort.",
+          "images": [
+              "images/Summer Maxi Dress/dress02.jpg",
+              "images/Summer Maxi Dress/dress03.jpg",
+              "images/Summer Maxi Dress/dress04.jpg",
+              "images/Summer Maxi Dress/dress05.jpg",
+              "images/Summer Maxi Dress/dress06.jpg"
+          ],
+          "sizes": ["S", "M", "XS", "L", "XL", "2XL"]
+        },
+        "3": {
+          "name": "Women's Black Midi Dress",
+          "price": "1999.99",
+          "description": "Modern Midi Dress designed for comfort and durability.",
+          "images": [
+              "images/Black/black02.jpg",
+              "images/Black/black03.jpg",
+              "images/Black/black04.jpg",
+              "images/Black/black05.jpg",
+              "images/Black/black06.jpg",
+              "images/Black/black07.jpg"
+          ],
+          "sizes": ["S", "M", "XS", "L", "XL", "2XL"]
+        }
+      };
+      
       if (!products[productId]) {
         document.getElementById("productDetailsContainer").innerHTML = "<p class='text-danger'>Product not found.</p>";
         return;
       }
-
+      
       const product = products[productId];
-
-      // Fixed Image Carousel: Iterates over all images properly
+      console.log("Loaded product:", product);
+      
+      // Build the HTML for the product details page.
+      // Data attributes are used for the button parameters.
       const html = `
         <div class="row justify-content-center align-items-center">
           <!-- Left Side: Image Carousel -->
@@ -127,7 +128,7 @@
               <div id="productCarousel" class="carousel slide product-carousel" data-bs-ride="carousel">
                 <div class="carousel-indicators">
                   ${product.images.map((img, index) => `
-                    <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="${index}"
+                    <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="${index}" 
                       ${index === 0 ? 'class="active"' : ""} aria-label="Slide ${index + 1}"></button>
                   `).join("")}
                 </div>
@@ -147,7 +148,7 @@
               </div>
             </div>
           </div>
-
+          
           <!-- Right Side: Product Details -->
           <div class="col-md-6 product-details">
             <h2>${product.name}</h2>
@@ -160,63 +161,79 @@
                 ${product.sizes.map(size => `<option value="${size}">${size}</option>`).join("")}
               </select>
             </div>
-            <button class="btn btn-outline-primary"
-              onclick="addToCart('${productId}', '${product.name}', '${product.price}', '${product.images[0]}')">Add to Cart</button>
-            <button class="btn btn-primary"
-              onclick="buyNow('${productId}', '${product.name}', '${product.price}', '${product.images[0]}')">Buy Now</button>
+            <button 
+              class="btn btn-outline-primary add-to-cart"
+              data-id='${productId}'
+              data-name='${product.name}'
+              data-price='${product.price}'
+              data-image='${product.images[0]}'>
+              Add to Cart
+            </button>
+            <button 
+              class="btn btn-primary buy-now"
+              data-id='${productId}'
+              data-name='${product.name}'
+              data-price='${product.price}'
+              data-image='${product.images[0]}'>
+              Buy Now
+            </button>
           </div>
         </div>
       `;
-
+      
       document.getElementById("productDetailsContainer").innerHTML = html;
+      
+      // Attach event listeners to the buttons after they are rendered.
+      document.querySelector(".add-to-cart").addEventListener("click", function () {
+        const btn = this;
+        const id = btn.getAttribute("data-id");
+        const name = btn.getAttribute("data-name");
+        const price = btn.getAttribute("data-price");
+        const image = btn.getAttribute("data-image");
+        addToCart(id, name, price, image);
+      });
+      document.querySelector(".buy-now").addEventListener("click", function () {
+        const btn = this;
+        const id = btn.getAttribute("data-id");
+        const name = btn.getAttribute("data-name");
+        const price = btn.getAttribute("data-price");
+        const image = btn.getAttribute("data-image");
+        buyNow(id, name, price, image);
+      });
     });
-
-    // Function to add product to cart
+    
     function addToCart(id, name, price, image) {
+      console.log("addToCart called with:", id, name, price, image);
       const size = document.getElementById("sizeSelect").value;
       if (!size) {
         alert("Please select a size before adding to cart.");
         return;
       }
+      
       let cart = JSON.parse(localStorage.getItem("cart")) || [];
       cart.push({ id, name, price, image, size });
       localStorage.setItem("cart", JSON.stringify(cart));
+      
       alert("Product added to cart!");
+      // Optionally, you could redirect or perform another action here.
     }
-function addToCart(id, name, price, image) {
-  const size = document.getElementById("sizeSelect").value;
-  if (!size) {
-    alert("Please select a size before adding to cart.");
-    return;
-  }
-  
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart.push({ id, name, price, image, size });
-  localStorage.setItem("cart", JSON.stringify(cart));
-
-  alert("Product added to cart!");
-
-  // Redirect to cart page after adding
-  if (confirm("Item added! Do you want to go to your cart?")) {
-    window.location.href = "cart.html";
-  }
-}
-
-
-    // Function for Buy Now
+    
     function buyNow(id, name, price, image) {
+      console.log("buyNow called with:", id, name, price, image);
       const size = document.getElementById("sizeSelect").value;
       if (!size) {
         alert("Please select a size before proceeding.");
         return;
       }
+      
       let cart = JSON.parse(localStorage.getItem("cart")) || [];
       cart.push({ id, name, price, image, size });
       localStorage.setItem("cart", JSON.stringify(cart));
+      
+      // Redirect immediately to the payment page with the product id in the query string.
       window.location.href = `payment.html?id=${id}`;
     }
   </script>
 </body>
 </html>
-
 
