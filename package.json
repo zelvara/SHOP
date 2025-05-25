@@ -1,0 +1,10 @@
+{
+  "name": "SHOP",
+  "version": "1.0.0",
+  "description": "A simple e-commerce website",
+  "scripts": {
+    "test": "echo \"No tests defined, skipping...\""
+  },
+  "author": "",
+  "license": "ISC"
+}
