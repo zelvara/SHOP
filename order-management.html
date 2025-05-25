@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Order Management - Zelvara</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #fefdfe; font-family: 'Segoe UI', sans-serif; color: #333; }
+    .container { max-width: 800px; margin: auto; padding-top: 20px; }
+    .order-item { padding: 15px; background: #fff; border-radius: 5px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .btn-confirm { background-color: #28a745; color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="mb-4 text-center">Order Management</h2>
+    <div id="adminOrders">Loading orders...</div>
+  </div>
+
+  <script>
+    function loadAdminOrders() {
+      let orders = JSON.parse(localStorage.getItem("orders")) || [];
+      const container = document.getElementById("adminOrders");
+
+      if (orders.length === 0) {
+        container.innerHTML = "<p class='text-center text-danger'>No new orders.</p>";
+        return;
+      }
+
+      let orderHTML = "";
+      orders.forEach((order, index) => {
+        let status = order.status === "Confirmed" ? "Confirmed ✅" : "Processing ⏳";
+        orderHTML += `
+          <div class="order-item">
+            <p><strong>Order Date:</strong> ${order.timestamp}</p>
+            <p><strong>Total:</strong> ₹${order.total}</p>
+            <p><strong>Customer:</strong> ${order.address}, ${order.city}, ${order.state}, ${order.pincode}</p>
+            <p><strong>Transaction ID:</strong> ${order.utr}</p>
+            <p><strong>Status:</strong> <span>${status}</span></p>
+            ${order.status !== "Confirmed" ? `<button class="btn btn-confirm" onclick="confirmOrder(${index})">Confirm Order</button>` : ""}
+          </div>
+        `;
+      });
+
+      container.innerHTML = orderHTML;
+    }
+
+    function confirmOrder(index) {
+      let orders = JSON.parse(localStorage.getItem("orders")) || [];
+      orders[index].status = "Confirmed";
+      localStorage.setItem("orders", JSON.stringify(orders));
+      loadAdminOrders();
+      alert("Order has been confirmed!");
+    }
+
+    window.onload = loadAdminOrders;
+  </script>
+</body>
+</html>

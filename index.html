@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zelvara - Clothing Store</title>
+  
+  <!-- Bootstrap CSS -->
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
+    rel="stylesheet" 
+  />
+  
+  <style>
+    /* Global Styles */
+    body {
+      background-color: #fefdfe;
+      font-family: 'Segoe UI', sans-serif;
+      color: #333;
+    }
+    
+    /* Navigation */
+    .navbar {
+      background-color: #1a1a1a;
+    }
+    .navbar-brand, .navbar-nav .nav-link {
+      color: #f7c148 !important;
+      font-weight: 600;
+    }
+  
+    /* Trending Slider */
+    .trending-slider .carousel-item {
+      height: 350px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .trending-slider .carousel-caption {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 1rem;
+      border-radius: 5px;
+    }
+    .trending-slider h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+  
+    /* Dynamic Products Section */
+    .product-card {
+      border: none;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .img-container {
+      width: 100%;
+      height: 250px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .product-title {
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+    .product-price {
+      color: #28a745;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+  
+    /* View Orders Section */
+    .view-orders {
+      text-align: center;
+      margin: 40px 0;
+    }
+    .view-orders .btn {
+      font-size: 1.1rem;
+      padding: 10px 20px;
+    }
+    
+    /* Footer */
+    .footer {
+      background-color: #1a1a1a;
+      color: #f7c148;
+      padding: 1rem 0;
+      text-align: center;
+      margin-top: 40px;
+    }
+    a {
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#">Zelvara</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navbarNav" aria-controls="navbarNav" 
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+         <ul class="navbar-nav ms-auto">
+           <li class="nav-item">
+             <a class="nav-link active" href="#">Home</a>
+           </li>
+           <li class="nav-item">
+             <a class="nav-link" href="products.html">Products</a>
+           </li>
+           <li class="nav-item">
+             <a class="nav-link" href="cart.html">Cart</a>
+           </li>
+           <li class="nav-item">
+             <a class="nav-link" href="contact.html">Contact</a>
+           </li>
+           <!-- New Navigation Link for Orders -->
+           <li class="nav-item">
+             <a class="nav-link" href="order-confirmation.html">My Orders</a>
+           </li>
+         </ul>
+      </div>
+    </div>
+  </nav>
+  
+  <!-- Trending Slider -->
+  <div id="trendingSlider" class="carousel slide trending-slider" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active" style="background-image: url('images/trending1.jpg');">
+        <div class="carousel-caption d-none d-md-block">
+          <h2>Big Trending Deals!</h2>
+          <p>Up to 50% off on selected items</p>
+        </div>
+      </div>
+      <div class="carousel-item" style="background-image: url('images/trending2.jpg');">
+        <div class="carousel-caption d-none d-md-block">
+          <h2>New Arrivals</h2>
+          <p>Discover the latest fashion trends</p>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#trendingSlider" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#trendingSlider" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+  
+  <!-- Dynamic Products Section -->
+  <div class="container py-5">
+    <h2 class="mb-4 text-center">Our Products</h2>
+    <div class="row g-4" id="productsContainer">
+      <!-- Product cards will be dynamically inserted here -->
+    </div>
+  </div>
+  
+  <!-- View Orders Section -->
+  <div class="view-orders container">
+    <a href="order-confirmation.html" class="btn btn-outline-warning">
+      View Your Orders &amp; Check Order Status
+    </a>
+  </div>
+  
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Zelvara. All rights reserved.</p>
+    </div>
+  </footer>
+  
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Dynamic Product Loading Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const data = {
+        products: [
+          {
+            "id": "1",
+            "name": "Classic Denim Jacket",
+            "price": "499.99",
+            "description": "A timeless jacket that complements any look.",
+            "image": "images/Classic Denim Jacket/red01.jpg"
+          },
+          {
+            "id": "2",
+            "name": "Women&apos;s White &amp; Black All Over Printed Dress",
+            "price": "699.99",
+            "description": "Flowy, elegant, and perfect for warm days.",
+            "image": "images/Summer Maxi Dress/dress01.jpg"
+          },
+          {
+            "id": "3",
+            "name": "Women&apos;s Black Midi Dress",
+            "price": "1999.99",
+            "description": "Sleek, stylish, and versatile for any event.",
+            "image": "images/Black/black01.jpg"
+          }
+        ]
+      };
+      
+      const container = document.getElementById("productsContainer");
+      container.innerHTML = "";
+      data.products.forEach(product => {
+        const colDiv = document.createElement("div");
+        colDiv.className = "col-md-4";
+        colDiv.innerHTML = `
+          <a href="product.html?id=${product.id}" style="text-decoration:none; color:inherit;">
+            <div class="card product-card">
+              <div class="img-container">
+                <img src="${product.image}" alt="${product.name}">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title product-title">${product.name}</h5>
+                <p class="card-text product-price">₹${product.price}</p>
+                <p class="card-text">${product.description}</p>
+              </div>
+            </div>
+          </a>
+        `;
+        container.appendChild(colDiv);
+      });
+    });
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zelvara - Order Details</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #fefdfe;
+      font-family: 'Segoe UI', sans-serif;
+      color: #333;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      padding-top: 40px;
+    }
+    .order-detail {
+      background-color: #fff;
+      border-radius: 5px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .order-detail h4 {
+      margin-bottom: 20px;
+    }
+    .status {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="order-detail">
+      <h4>Order Details</h4>
+      <div id="orderInfo">
+        <!-- Order information will be loaded here -->
+      </div>
+      <div class="mt-4">
+        <a href="order-confirmation.html" class="btn btn-secondary">Back to Orders</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function loadOrderDetails() {
+      const orders = JSON.parse(localStorage.getItem("orders")) || [];
+      const index = localStorage.getItem("selectedOrderIndex");
+      const order = orders[index];
+      const container = document.getElementById("orderInfo");
+
+      if (!order) {
+        container.innerHTML = "<p class='text-danger'>Order not found.</p>";
+        return;
+      }
+      
+      // Set the status display based on order status.
+      let statusText = "";
+      if (order.status === "Confirmed") {
+        statusText = `<span class="text-success status">Order Confirmed ✅</span>`;
+      } else {
+        statusText = `<span class="text-warning status">Order Processing ⏳</span>`;
+      }
+      
+      const html = `
+        <p><strong>Order Date:</strong> ${order.timestamp}</p>
+        <p><strong>Total Amount:</strong> ₹${order.total}</p>
+        <p><strong>Delivery Address:</strong> ${order.address}, ${order.city || ""} ${order.state || ""} ${order.pincode || ""}</p>
+        <p><strong>Transaction ID:</strong> ${order.utr}</p>
+        <p><strong>Status:</strong> ${statusText}</p>
+      `;
+      
+      container.innerHTML = html;
+    }
+
+    window.onload = loadOrderDetails;
+  </script>
+
+  <!-- Bootstrap Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

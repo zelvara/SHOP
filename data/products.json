@@ -1,0 +1,18 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "name": "Classic Denim Jacket",
+      "price": "99.99",
+      "description": "A timeless jacket that complements any look.",
+      "image": "images/Classic%20Denim%20Jacket/red01.jpg"
+    },
+    {
+      "id": "2",
+      "name": "Summer Maxi Dress",
+      "price": "79.99",
+      "description": "Flowy, elegant, and perfect for warm days.",
+      "image": "images/Summer%20Maxi%20Dress/dress01.jpg"
+    }
+  ]
+}
