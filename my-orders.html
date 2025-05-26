@@ -20,7 +20,7 @@
   <div class="container py-5">
     <h2 class="mb-4">My Orders</h2>
     <div id="ordersContainer">
-      <!-- Orders for the current user will appear here automatically -->
+      <!-- Orders for the current user will appear here automatically. -->
     </div>
     <div id="emptyMsg" class="alert alert-info" style="display:none;">
       You haven't placed any orders yet.
@@ -45,53 +45,55 @@
       measurementId: "G-MZMGYTCVJ3"
     };
 
-    // Initialize Firebase and our services.
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Check user authentication automatically.
-    firebase.auth().onAuthStateChanged(function(user) {
+    // Use a realtime listener to update orders automatically.
+    firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        // Set up a realtime listener (automated) for orders placed by this user.
-        const ordersQuery = db.collection("orders").where("uid", "==", user.uid);
-        ordersQuery.onSnapshot(snapshot => {
-          const container = document.getElementById("ordersContainer");
-          container.innerHTML = "";
-          if (snapshot.empty) {
-            document.getElementById("emptyMsg").style.display = "block";
-          } else {
-            document.getElementById("emptyMsg").style.display = "none";
-            snapshot.forEach(doc => {
-              const order = doc.data();
-              const orderCard = document.createElement("div");
-              orderCard.className = "card order-card";
-              orderCard.innerHTML = `
-                <div class="card-body">
-                  <h5 class="card-title">Order #${doc.id}</h5>
-                  <p class="card-text">Date: ${order.date || "N/A"}</p>
-                  <p class="card-text">Total: ₹${order.total || "0.00"}</p>
-                  <p class="card-text">Items: ${order.items ? order.items.join(", ") : "No items"}</p>
-                </div>
-              `;
-              container.appendChild(orderCard);
-            });
-          }
-        }, error => {
-          console.error("Error listening for orders: ", error);
-        });
+        db.collection("orders")
+          .where("uid", "==", user.uid)
+          .onSnapshot((snapshot) => {
+            const container = document.getElementById("ordersContainer");
+            container.innerHTML = "";
+            if (snapshot.empty) {
+              document.getElementById("emptyMsg").style.display = "block";
+            } else {
+              document.getElementById("emptyMsg").style.display = "none";
+              snapshot.forEach((doc) => {
+                const order = doc.data();
+                const orderCard = document.createElement("div");
+                orderCard.className = "card order-card";
+                orderCard.innerHTML = `
+                  <div class="card-body">
+                    <h5 class="card-title">Order #${doc.id}</h5>
+                    <p class="card-text">Date: ${order.date || "N/A"}</p>
+                    <p class="card-text">Total: ₹${order.total || "0.00"}</p>
+                    <p class="card-text">Items: ${order.items ? order.items.join(", ") : "No items"}</p>
+                    <p class="card-text">Status: ${order.status || "pending"}</p>
+                  </div>
+                `;
+                container.appendChild(orderCard);
+              });
+            }
+          }, (error) => {
+            console.error("Error fetching orders:", error);
+          });
       } else {
-        window.location.href = "auth.html";  // Redirect if not authenticated.
+        window.location.href = "auth.html";
       }
     });
 
-    // Log out the current user.
+    // Logout function.
     function logoutUser(){
-      auth.signOut().then(() => {
-        window.location.href = "auth.html";
-      }).catch(error => {
-        alert("Error signing out: " + error.message);
-      });
+      auth.signOut()
+        .then(() => {
+          window.location.href = "auth.html";
+        })
+        .catch((error) => {
+          alert("Error signing out: " + error.message);
+        });
     }
   </script>
 
@@ -99,5 +101,4 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
 

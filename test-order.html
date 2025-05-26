@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Order</title>
+  <!-- Firebase SDK for app and Firestore (compat versions) -->
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <h1>Test Order Page</h1>
+  <button onclick="placeTestOrder()">Place Test Order</button>
+
+  <script>
+    // Replace with your actual Firebase config values
+    const firebaseConfig = {
+      apiKey: "AIzaSyBGMqdsoSVs7JwM-zpPFDbErPKoJONH6rk",
+      authDomain: "zelvara.firebaseapp.com",
+      projectId: "zelvara",
+      storageBucket: "zelvara.firebasestorage.app",
+      messagingSenderId: "818365516027",
+      appId: "1:818365516027:web:9d05f2c2d61279595e485e",
+      measurementId: "G-MZMGYTCVJ3"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Function to place a test order in the "orders" collection with an auto-generated document ID
+    function placeTestOrder() {
+      const testOrder = {
+        test: true,  // Marks this as test data
+        orderName: "Test Order",
+        date: new Date().toLocaleString(),
+        total: 250.00,
+        items: ["Classic Denim Jacket", "Women’s Black Midi Dress"]
+      };
+
+      db.collection("orders").add(testOrder)
+        .then((docRef) => {
+          alert("Order placed successfully! Order ID: " + docRef.id);
+          console.log("Order added with ID:", docRef.id);
+        })
+        .catch((error) => {
+          alert("Error placing order: " + error.message);
+          console.error("Error placing order:", error);
+        });
+    }
+  </script>
+</body>
+</html>

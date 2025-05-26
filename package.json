@@ -6,5 +6,8 @@
     "test": "echo \"No tests defined, skipping...\""
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "firebase-admin": "^13.4.0"
+  }
 }
