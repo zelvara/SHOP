@@ -1,109 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Zelvara - Order Management</title>
   <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
       background-color: #fefdfe;
-      padding: 2rem;
+      font-family: 'Segoe UI', sans-serif;
     }
-    .container {
-      max-width: 1000px;
-      margin: auto;
-    }
-    .order-header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    .table th, .table td {
-      vertical-align: middle;
+    .order-card {
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2 class="order-header">Order Management</h2>
-    <div id="ordersContainer"></div>
+  <div class="container py-5">
+    <h2 class="mb-4">All Orders (Management)</h2>
+    <div id="ordersContainer">
+      <!-- Orders will be refreshed automatically here. -->
+    </div>
+    <button class="btn btn-secondary mt-4" onclick="logoutAdmin()">Logout</button>
   </div>
 
+  <!-- Firebase SDKs (Compat Versions) -->
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
+
   <script>
-    function loadOrders() {
-      let orders = JSON.parse(localStorage.getItem("orders")) || [];
-      const container = document.getElementById("ordersContainer");
-      
-      if (orders.length === 0) {
-        container.innerHTML = "<p>No orders have been placed yet.</p>";
-        return;
+    // Use the same Firebase configuration as before.
+    const firebaseConfig = {
+      apiKey: "AIzaSyBGMqdsoSVs7JwM-zpPFDbErPKoJONH6rk",
+      authDomain: "zelvara.firebaseapp.com",
+      projectId: "zelvara",
+      storageBucket: "zelvara.firebasestorage.app",
+      messagingSenderId: "818365516027",
+      appId: "1:818365516027:web:9d05f2c2d61279595e485e",
+      measurementId: "G-MZMGYTCVJ3"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // For management, you might restrict access by checking if a user is an admin.
+    // Here, we assume that the admin is already authenticated.
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // Listen realtime for all orders. Optionally, filter by status: "pending"
+        db.collection("orders").orderBy("date", "desc")
+          .onSnapshot((snapshot) => {
+            const container = document.getElementById("ordersContainer");
+            container.innerHTML = "";
+            if (snapshot.empty) {
+              container.innerHTML = "<p>No orders found.</p>";
+            } else {
+              snapshot.forEach((doc) => {
+                const order = doc.data();
+                const orderCard = document.createElement("div");
+                orderCard.className = "card order-card";
+                orderCard.innerHTML = `
+                  <div class="card-body">
+                    <h5 class="card-title">Order #${doc.id}</h5>
+                    <p class="card-text">Date: ${order.date || "N/A"}</p>
+                    <p class="card-text">Total: ₹${order.total || "0.00"}</p>
+                    <p class="card-text">Customer: ${order.email || "N/A"}</p>
+                    <p class="card-text">Items: ${order.items ? order.items.join(", ") : "No items"}</p>
+                    <p class="card-text">Status: ${order.status || "pending"}</p>
+                    <button class="btn btn-success btn-sm" onclick="confirmOrder('${doc.id}')">Confirm Order</button>
+                  </div>
+                `;
+                container.appendChild(orderCard);
+              });
+            }
+          }, (error) => {
+            console.error("Error listening for orders:", error);
+          });
+      } else {
+        window.location.href = "auth.html";
       }
-      
-      let html = `<table class="table table-bordered">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Timestamp</th>
-                        <th>Products</th>
-                        <th>Delivery Address</th>
-                        <th>Total Amount</th>
-                        <th>UTR</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>`;
-      
-      orders.forEach((order, index) => {
-        let productsHtml = "<ul>";
-        (order.products || []).forEach(prod => {
-          productsHtml += `<li>${prod.name} - ₹${prod.price} (Size: ${prod.size})</li>`;
+    });
+
+    // Example function: Update an order status.
+    function confirmOrder(orderId) {
+      db.collection("orders").doc(orderId).update({ status: "confirmed" })
+        .then(() => {
+          alert("Order confirmed.");
+        })
+        .catch(error => {
+          alert("Error confirming order: " + error.message);
         });
-        productsHtml += "</ul>";
-        
-        html += `<tr>
-                    <td>${index + 1}</td>
-                    <td>${order.timestamp || ''}</td>
-                    <td>${productsHtml}</td>
-                    <td>${order.address || ''}, ${order.city || ''}, ${order.state || ''} - ${order.pincode || ''}</td>
-                    <td>₹${order.total || ''}</td>
-                    <td>${order.utr || ''}</td>
-                    <td>
-                      <select onchange="updateStatus(${index}, this.value)" class="form-select">
-                        <option value="Processing" ${order.status === "Processing" ? "selected" : ""}>Processing</option>
-                        <option value="Shipped" ${order.status === "Shipped" ? "selected" : ""}>Shipped</option>
-                        <option value="Delivered" ${order.status === "Delivered" ? "selected" : ""}>Delivered</option>
-                        <option value="Cancelled" ${order.status === "Cancelled" ? "selected" : ""}>Cancelled</option>
-                      </select>
-                    </td>
-                    <td><button class="btn btn-danger" onclick="deleteOrder(${index})">Delete</button></td>
-                  </tr>`;
-      });
-      
-      html += `</tbody></table>`;
-      container.innerHTML = html;
     }
 
-    function updateStatus(index, newStatus) {
-      let orders = JSON.parse(localStorage.getItem("orders")) || [];
-      orders[index].status = newStatus;
-      localStorage.setItem("orders", JSON.stringify(orders));
-      alert("Order status updated.");
-      loadOrders();
+    function logoutAdmin(){
+      auth.signOut().then(() => { window.location.href = "auth.html"; })
+      .catch(error => { alert("Error signing out: " + error.message); });
     }
-
-    function deleteOrder(index) {
-      if (confirm("Are you sure you want to delete this order?")) {
-        let orders = JSON.parse(localStorage.getItem("orders")) || [];
-        orders.splice(index, 1);
-        localStorage.setItem("orders", JSON.stringify(orders));
-        loadOrders();
-      }
-    }
-
-    window.onload = loadOrders;
   </script>
+  
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

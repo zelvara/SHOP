@@ -5,140 +5,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Zelvara - Clothing Store</title>
   <!-- Bootstrap CSS -->
-  <link 
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
-    rel="stylesheet" 
-  />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
-    /* Global Styles */
     body {
       background-color: #fefdfe;
       font-family: 'Segoe UI', sans-serif;
       color: #333;
     }
-    /* Navigation */
-    .navbar {
-      background-color: #1a1a1a;
-    }
-    .navbar-brand, .navbar-nav .nav-link, .btn-outline-light {
-      color: #f7c148 !important;
-      font-weight: 600;
-    }
-    /* Trending Slider */
-    .trending-slider .carousel-item {
-      height: 350px;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-    }
-    .trending-slider .carousel-caption {
-      background: rgba(0, 0, 0, 0.5);
-      padding: 1rem;
-      border-radius: 5px;
-    }
-    .trending-slider h2 {
-      font-size: 2.5rem;
-      font-weight: 700;
-    }
-    /* Dynamic Products Section */
-    .product-card {
-      border: none;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-    }
-    .product-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-    .img-container {
-      width: 100%;
-      height: 250px;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    .img-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-    .product-title {
-      font-weight: 600;
-      color: #1a1a1a;
-    }
-    .product-price {
-      color: #28a745;
-      font-size: 1.2rem;
-      font-weight: 700;
-    }
-    /* Orders / Place Order Section */
-    .order-actions {
-      margin: 2rem 0;
-      text-align: center;
-    }
-    /* Footer */
-    .footer {
-      background-color: #1a1a1a;
-      color: #f7c148;
-      padding: 1rem 0;
-      text-align: center;
-      margin-top: 40px;
-    }
-    a {
-      text-decoration: none;
-    }
-    /* Hide the entire main content until authentication is confirmed */
-    #main-content {
-      display: none;
-    }
+    .navbar { background-color: #1a1a1a; }
+    .navbar-brand, .navbar-nav .nav-link, .btn-outline-light { color: #f7c148 !important; font-weight: 600; }
+    .trending-slider .carousel-item { height: 350px; background-size: cover; background-position: center; position: relative; }
+    .trending-slider .carousel-caption { background: rgba(0,0,0,0.5); padding: 1rem; border-radius: 5px; }
+    .trending-slider h2 { font-size: 2.5rem; font-weight: 700; }
+    .product-card { border: none; transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; }
+    .product-card:hover { transform: translateY(-5px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .img-container { width: 100%; height: 250px; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .img-container img { width: 100%; height: 100%; object-fit: contain; }
+    .order-actions { margin: 2rem 0; text-align: center; }
+    .footer { background-color: #1a1a1a; color: #f7c148; padding: 1rem 0; text-align: center; margin-top: 40px; }
+    a { text-decoration: none; }
+    /* Hide contents until authentication is confirmed */
+    #main-content { display: none; }
   </style>
 </head>
 <body>
-  <!-- Main Content: Only displayed when the user is authenticated -->
   <div id="main-content">
-    <!-- Navigation Bar -->
+    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg">
       <div class="container">
         <a class="navbar-brand" href="#">Zelvara</a>
-        <button class="navbar-toggler" type="button" 
-                data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-                aria-controls="navbarNav" aria-expanded="false" 
-                aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-           <ul class="navbar-nav ms-auto">
-             <li class="nav-item">
-               <a class="nav-link active" href="#">Home</a>
-             </li>
-             <li class="nav-item">
-               <a class="nav-link" href="products.html">Products</a>
-             </li>
-             <li class="nav-item">
-               <a class="nav-link" href="cart.html">Cart</a>
-             </li>
-             <li class="nav-item">
-               <a class="nav-link" href="contact.html">Contact</a>
-             </li>
-             <!-- Link for viewing orders -->
-             <li class="nav-item">
-               <a class="nav-link" href="order-confirmation.html">My Orders</a>
-             </li>
-             <!-- Logout Button -->
-             <li class="nav-item">
-               <button class="btn btn-outline-light" onclick="logoutUser()">Logout</button>
-             </li>
-           </ul>
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+            <li class="nav-item"><a class="nav-link" href="cart.html">Cart</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+            <li class="nav-item"><a class="nav-link" href="my-orders.html">My Orders</a></li>
+            <li class="nav-item">
+              <button class="btn btn-outline-light" onclick="logoutUser()">Logout</button>
+            </li>
+          </ul>
         </div>
       </div>
     </nav>
-    
+
     <!-- Trending Slider -->
     <div id="trendingSlider" class="carousel slide trending-slider" data-bs-ride="carousel">
       <div class="carousel-inner">
-        <!-- (Make sure these image paths are correct.) -->
         <div class="carousel-item active" style="background-image: url('images/trending1.jpg');">
           <div class="carousel-caption d-none d-md-block">
             <h2>Big Trending Deals!</h2>
@@ -161,20 +78,20 @@
         <span class="visually-hidden">Next</span>
       </button>
     </div>
-    
-    <!-- Dynamic Products Section -->
+
+    <!-- Products Section -->
     <div class="container py-5">
       <h2 class="mb-4 text-center">Our Products</h2>
       <div class="row g-4" id="productsContainer">
-        <!-- Product cards will be dynamically inserted here. -->
+        <!-- Dynamic product cards loaded here -->
       </div>
     </div>
-    
+
     <!-- Order Actions Section -->
     <div class="order-actions container">
       <button class="btn btn-primary" onclick="placeOrder()">Place Order</button>
     </div>
-    
+
     <!-- Footer -->
     <footer class="footer">
       <div class="container">
@@ -182,14 +99,14 @@
       </div>
     </footer>
   </div>
-  
-  <!-- Firebase SDKs using Compat Libraries -->
+
+  <!-- Firebase SDKs (Compat Versions) -->
   <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
   
   <script>
-    // Your Firebase configuration (make sure these values match your Firebase Console)
+    // Firebase configuration (update with your Firebase Console values)
     const firebaseConfig = {
       apiKey: "AIzaSyBGMqdsoSVs7JwM-zpPFDbErPKoJONH6rk",
       authDomain: "zelvara.firebaseapp.com",
@@ -200,66 +117,54 @@
       measurementId: "G-MZMGYTCVJ3"
     };
     firebase.initializeApp(firebaseConfig);
+    
     const auth = firebase.auth();
     const db = firebase.firestore();
-    
-    // Auth guard: Only display content if a user is signed in.
+
+    // Authentication Guard
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-        // Display the main content
         document.getElementById("main-content").style.display = "block";
-        console.log("User is authenticated:", user);
+        console.log("Authenticated:", user);
       } else {
-        // If no user is signed in, redirect to the authentication page.
-        console.warn("No user signed in – redirecting to auth page.");
         window.location.href = "auth.html";
       }
     });
-
-    // Logout function: Sign the user out and redirect to auth.html.
+    
+    // Logout function
     function logoutUser(){
-      auth.signOut()
-        .then(() => {
-          window.location.href = "auth.html";
-        })
-        .catch(error => {
-          alert("Error signing out: " + error.message);
-        });
+      auth.signOut().then(() => {
+        window.location.href = "auth.html";
+      }).catch(error => {
+        alert("Error signing out: " + error.message);
+      });
     }
-
-    // Place Order function: This simulates placing an order.
-    // In a real application, you would collect order details through a checkout process.
+    
+    // Sample function: Place Order
+    // When a user places an order, we save the order to Firestore with the current UID.
     function placeOrder(){
       const user = auth.currentUser;
-      if (!user) {
-        alert("Please sign in first.");
-        return;
-      }
+      if (!user) { alert("Please sign in first."); return; }
       
-      // Create a sample order object
       const orderData = {
         uid: user.uid,
         email: user.email,
         date: new Date().toLocaleString(),
         total: 250.00, // Example total amount
-        items: [ "Classic Denim Jacket", "Women’s Black Midi Dress" ]  // Example ordered items
+        items: ["Classic Denim Jacket", "Women’s Black Midi Dress"],
+        status: "pending"  // initial order status
       };
       
       db.collection("orders").add(orderData)
         .then(docRef => {
-          alert("Order placed successfully! (Order ID: " + docRef.id + ")");
+          alert("Order placed successfully! Order ID: " + docRef.id);
         })
         .catch(error => {
           alert("Error placing order: " + error.message);
         });
     }
-  </script>
-  
-  <!-- Bootstrap JS Bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-  
-  <!-- Dynamic Product Loading Script -->
-  <script>
+    
+    // Load sample static product data dynamically.
     document.addEventListener("DOMContentLoaded", function () {
       const data = {
         products: [
@@ -310,6 +215,8 @@
       });
     });
   </script>
+  
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
