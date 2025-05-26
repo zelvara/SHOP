@@ -183,6 +183,34 @@
     </div>
   </footer>
   
+  <!-- Firebase SDKs -->
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js">          </script>
+
+  
+  <!-- Initialize Firebase -->
+  <script>
+    // Replace these placeholder values with your actual Firebase project configuration.
+    const firebaseConfig = {
+  apiKey: "AIzaSyBGMqdsoSVs7JwM-zpPFDbErPKoJONH6rk",
+  authDomain: "zelvara.firebaseapp.com",
+  projectId: "zelvara",
+  storageBucket: "zelvara.firebasestorage.app",
+  messagingSenderId: "818365516027",
+  appId: "1:818365516027:web:9d05f2c2d61279595e485e",
+  measurementId: "G-MZMGYTCVJ3"
+};
+    
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+    // Initialize Firebase services
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+  </script>
+  
   <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
   
@@ -240,4 +268,5 @@
   </script>
 </body>
 </html>
+
 
