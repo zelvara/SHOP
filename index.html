@@ -4,13 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Zelvara - Clothing Store</title>
-  
   <!-- Bootstrap CSS -->
   <link 
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
     rel="stylesheet" 
   />
-
   <style>
     /* Global Styles */
     body {
@@ -18,16 +16,14 @@
       font-family: 'Segoe UI', sans-serif;
       color: #333;
     }
-    
     /* Navigation */
     .navbar {
       background-color: #1a1a1a;
     }
-    .navbar-brand, .navbar-nav .nav-link {
+    .navbar-brand, .navbar-nav .nav-link, .btn-outline-light {
       color: #f7c148 !important;
       font-weight: 600;
     }
-  
     /* Trending Slider */
     .trending-slider .carousel-item {
       height: 350px;
@@ -44,7 +40,6 @@
       font-size: 2.5rem;
       font-weight: 700;
     }
-  
     /* Dynamic Products Section */
     .product-card {
       border: none;
@@ -78,17 +73,11 @@
       font-size: 1.2rem;
       font-weight: 700;
     }
-  
-    /* View Orders Section */
-    .view-orders {
+    /* Orders / Place Order Section */
+    .order-actions {
+      margin: 2rem 0;
       text-align: center;
-      margin: 40px 0;
     }
-    .view-orders .btn {
-      font-size: 1.1rem;
-      padding: 10px 20px;
-    }
-    
     /* Footer */
     .footer {
       background-color: #1a1a1a;
@@ -100,23 +89,23 @@
     a {
       text-decoration: none;
     }
-    
-    /* Hide the main content until authentication is confirmed */
+    /* Hide the entire main content until authentication is confirmed */
     #main-content {
       display: none;
     }
   </style>
 </head>
 <body>
-  <!-- Main Content: This container will be shown only if the user is authenticated -->
+  <!-- Main Content: Only displayed when the user is authenticated -->
   <div id="main-content">
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg">
       <div class="container">
         <a class="navbar-brand" href="#">Zelvara</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarNav" aria-controls="navbarNav" 
-                aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" 
+                data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" 
+                aria-label="Toggle navigation">
           <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -133,9 +122,13 @@
              <li class="nav-item">
                <a class="nav-link" href="contact.html">Contact</a>
              </li>
-             <!-- Navigation Link for Orders -->
+             <!-- Link for viewing orders -->
              <li class="nav-item">
                <a class="nav-link" href="order-confirmation.html">My Orders</a>
+             </li>
+             <!-- Logout Button -->
+             <li class="nav-item">
+               <button class="btn btn-outline-light" onclick="logoutUser()">Logout</button>
              </li>
            </ul>
         </div>
@@ -145,7 +138,7 @@
     <!-- Trending Slider -->
     <div id="trendingSlider" class="carousel slide trending-slider" data-bs-ride="carousel">
       <div class="carousel-inner">
-        <!-- Ensure these image paths are correct. Place trending1.jpg and trending2.jpg in an "images" folder. -->
+        <!-- (Make sure these image paths are correct.) -->
         <div class="carousel-item active" style="background-image: url('images/trending1.jpg');">
           <div class="carousel-caption d-none d-md-block">
             <h2>Big Trending Deals!</h2>
@@ -173,15 +166,13 @@
     <div class="container py-5">
       <h2 class="mb-4 text-center">Our Products</h2>
       <div class="row g-4" id="productsContainer">
-        <!-- Product cards will be dynamically inserted here -->
+        <!-- Product cards will be dynamically inserted here. -->
       </div>
     </div>
     
-    <!-- View Orders Section -->
-    <div class="view-orders container">
-      <a href="order-confirmation.html" class="btn btn-outline-warning">
-        View Your Orders &amp; Check Order Status
-      </a>
+    <!-- Order Actions Section -->
+    <div class="order-actions container">
+      <button class="btn btn-primary" onclick="placeOrder()">Place Order</button>
     </div>
     
     <!-- Footer -->
@@ -196,10 +187,9 @@
   <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
-
-  <!-- Initialize Firebase -->
+  
   <script>
-    // Your Firebase configuration (verify these values in your Firebase Console)
+    // Your Firebase configuration (make sure these values match your Firebase Console)
     const firebaseConfig = {
       apiKey: "AIzaSyBGMqdsoSVs7JwM-zpPFDbErPKoJONH6rk",
       authDomain: "zelvara.firebaseapp.com",
@@ -209,28 +199,60 @@
       appId: "1:818365516027:web:9d05f2c2d61279595e485e",
       measurementId: "G-MZMGYTCVJ3"
     };
-
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    
-    // Initialize Firebase services
     const auth = firebase.auth();
     const db = firebase.firestore();
-  </script>
-
-  <!-- Auth Guard: Check if the user is authenticated -->
-  <script>
+    
+    // Auth guard: Only display content if a user is signed in.
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-        // User is signed in – display the main content
+        // Display the main content
         document.getElementById("main-content").style.display = "block";
         console.log("User is authenticated:", user);
       } else {
-        // No user is signed in – redirect to the authentication page
+        // If no user is signed in, redirect to the authentication page.
         console.warn("No user signed in – redirecting to auth page.");
         window.location.href = "auth.html";
       }
     });
+
+    // Logout function: Sign the user out and redirect to auth.html.
+    function logoutUser(){
+      auth.signOut()
+        .then(() => {
+          window.location.href = "auth.html";
+        })
+        .catch(error => {
+          alert("Error signing out: " + error.message);
+        });
+    }
+
+    // Place Order function: This simulates placing an order.
+    // In a real application, you would collect order details through a checkout process.
+    function placeOrder(){
+      const user = auth.currentUser;
+      if (!user) {
+        alert("Please sign in first.");
+        return;
+      }
+      
+      // Create a sample order object
+      const orderData = {
+        uid: user.uid,
+        email: user.email,
+        date: new Date().toLocaleString(),
+        total: 250.00, // Example total amount
+        items: [ "Classic Denim Jacket", "Women’s Black Midi Dress" ]  // Example ordered items
+      };
+      
+      db.collection("orders").add(orderData)
+        .then(docRef => {
+          alert("Order placed successfully! (Order ID: " + docRef.id + ")");
+        })
+        .catch(error => {
+          alert("Error placing order: " + error.message);
+        });
+    }
   </script>
   
   <!-- Bootstrap JS Bundle -->
@@ -250,14 +272,14 @@
           },
           {
             "id": "2",
-            "name": "Women&apos;s White &amp; Black All Over Printed Dress",
+            "name": "Women’s White & Black All Over Printed Dress",
             "price": "699.99",
             "description": "Flowy, elegant, and perfect for warm days.",
             "image": "images/Summer Maxi Dress/dress01.jpg"
           },
           {
             "id": "3",
-            "name": "Women&apos;s Black Midi Dress",
+            "name": "Women’s Black Midi Dress",
             "price": "1999.99",
             "description": "Sleek, stylish, and versatile for any event.",
             "image": "images/Black/black01.jpg"
@@ -290,3 +312,4 @@
   </script>
 </body>
 </html>
+
