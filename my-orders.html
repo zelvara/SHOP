@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Zelvara - My Orders</title>
   <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
   <style>
     body {
       background-color: #fefdfe;
@@ -20,11 +20,12 @@
   <div class="container py-5">
     <h2 class="mb-4">My Orders</h2>
     <div id="ordersContainer">
-      <!-- Orders (if any) will be inserted here -->
+      <!-- Orders for the current user will appear here automatically -->
     </div>
     <div id="emptyMsg" class="alert alert-info" style="display:none;">
       You haven't placed any orders yet.
     </div>
+    <button class="btn btn-secondary mt-4" onclick="logoutUser()">Logout</button>
   </div>
 
   <!-- Firebase SDKs (Compat Versions) -->
@@ -33,7 +34,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
   
   <script>
-    // Firebase configuration – update with your actual configuration values.
+    // Replace these with your actual Firebase configuration details.
     const firebaseConfig = {
       apiKey: "AIzaSyBGMqdsoSVs7JwM-zpPFDbErPKoJONH6rk",
       authDomain: "zelvara.firebaseapp.com",
@@ -44,36 +45,25 @@
       measurementId: "G-MZMGYTCVJ3"
     };
 
-    // Initialize Firebase
+    // Initialize Firebase and our services.
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Ensure only authenticated users can access orders
+    // Check user authentication automatically.
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-        // Once authenticated, query orders for the logged-in user.
-        loadUserOrders(user.uid);
-      } else {
-        // No user is signed in; redirect to the authentication page.
-        window.location.href = "auth.html";
-      }
-    });
-
-    // Function to load orders for the given user UID.
-    function loadUserOrders(userUID) {
-      db.collection("orders")
-        .where("uid", "==", userUID)
-        .get()
-        .then((querySnapshot) => {
+        // Set up a realtime listener (automated) for orders placed by this user.
+        const ordersQuery = db.collection("orders").where("uid", "==", user.uid);
+        ordersQuery.onSnapshot(snapshot => {
           const container = document.getElementById("ordersContainer");
-          container.innerHTML = ""; // Clear previous content if any.
-          if (querySnapshot.empty) {
+          container.innerHTML = "";
+          if (snapshot.empty) {
             document.getElementById("emptyMsg").style.display = "block";
           } else {
-            querySnapshot.forEach((doc) => {
+            document.getElementById("emptyMsg").style.display = "none";
+            snapshot.forEach(doc => {
               const order = doc.data();
-              // Customize the presentation as needed.
               const orderCard = document.createElement("div");
               orderCard.className = "card order-card";
               orderCard.innerHTML = `
@@ -87,10 +77,21 @@
               container.appendChild(orderCard);
             });
           }
-        })
-        .catch((error) => {
-          console.error("Error loading orders: ", error);
+        }, error => {
+          console.error("Error listening for orders: ", error);
         });
+      } else {
+        window.location.href = "auth.html";  // Redirect if not authenticated.
+      }
+    });
+
+    // Log out the current user.
+    function logoutUser(){
+      auth.signOut().then(() => {
+        window.location.href = "auth.html";
+      }).catch(error => {
+        alert("Error signing out: " + error.message);
+      });
     }
   </script>
 
@@ -98,3 +99,5 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+
