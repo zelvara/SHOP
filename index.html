@@ -10,7 +10,7 @@
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
     rel="stylesheet" 
   />
-  
+
   <style>
     /* Global Styles */
     body {
@@ -100,115 +100,137 @@
     a {
       text-decoration: none;
     }
+    
+    /* Hide the main content until authentication is confirmed */
+    #main-content {
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <!-- Navigation Bar -->
-  <nav class="navbar navbar-expand-lg">
-    <div class="container">
-      <a class="navbar-brand" href="#">Zelvara</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-              data-bs-target="#navbarNav" aria-controls="navbarNav" 
-              aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+  <!-- Main Content: This container will be shown only if the user is authenticated -->
+  <div id="main-content">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="#">Zelvara</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav" aria-controls="navbarNav" 
+                aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+           <ul class="navbar-nav ms-auto">
+             <li class="nav-item">
+               <a class="nav-link active" href="#">Home</a>
+             </li>
+             <li class="nav-item">
+               <a class="nav-link" href="products.html">Products</a>
+             </li>
+             <li class="nav-item">
+               <a class="nav-link" href="cart.html">Cart</a>
+             </li>
+             <li class="nav-item">
+               <a class="nav-link" href="contact.html">Contact</a>
+             </li>
+             <!-- Navigation Link for Orders -->
+             <li class="nav-item">
+               <a class="nav-link" href="order-confirmation.html">My Orders</a>
+             </li>
+           </ul>
+        </div>
+      </div>
+    </nav>
+    
+    <!-- Trending Slider -->
+    <div id="trendingSlider" class="carousel slide trending-slider" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <!-- Ensure these image paths are correct. Place trending1.jpg and trending2.jpg in an "images" folder. -->
+        <div class="carousel-item active" style="background-image: url('images/trending1.jpg');">
+          <div class="carousel-caption d-none d-md-block">
+            <h2>Big Trending Deals!</h2>
+            <p>Up to 50% off on selected items</p>
+          </div>
+        </div>
+        <div class="carousel-item" style="background-image: url('images/trending2.jpg');">
+          <div class="carousel-caption d-none d-md-block">
+            <h2>New Arrivals</h2>
+            <p>Discover the latest fashion trends</p>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#trendingSlider" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-         <ul class="navbar-nav ms-auto">
-           <li class="nav-item">
-             <a class="nav-link active" href="#">Home</a>
-           </li>
-           <li class="nav-item">
-             <a class="nav-link" href="products.html">Products</a>
-           </li>
-           <li class="nav-item">
-             <a class="nav-link" href="cart.html">Cart</a>
-           </li>
-           <li class="nav-item">
-             <a class="nav-link" href="contact.html">Contact</a>
-           </li>
-           <!-- New Navigation Link for Orders -->
-           <li class="nav-item">
-             <a class="nav-link" href="order-confirmation.html">My Orders</a>
-           </li>
-         </ul>
+      <button class="carousel-control-next" type="button" data-bs-target="#trendingSlider" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    
+    <!-- Dynamic Products Section -->
+    <div class="container py-5">
+      <h2 class="mb-4 text-center">Our Products</h2>
+      <div class="row g-4" id="productsContainer">
+        <!-- Product cards will be dynamically inserted here -->
       </div>
     </div>
-  </nav>
-  
-  <!-- Trending Slider -->
-  <div id="trendingSlider" class="carousel slide trending-slider" data-bs-ride="carousel">
-    <div class="carousel-inner">
-      <div class="carousel-item active" style="background-image: url('images/trending1.jpg');">
-        <div class="carousel-caption d-none d-md-block">
-          <h2>Big Trending Deals!</h2>
-          <p>Up to 50% off on selected items</p>
-        </div>
+    
+    <!-- View Orders Section -->
+    <div class="view-orders container">
+      <a href="order-confirmation.html" class="btn btn-outline-warning">
+        View Your Orders &amp; Check Order Status
+      </a>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; 2025 Zelvara. All rights reserved.</p>
       </div>
-      <div class="carousel-item" style="background-image: url('images/trending2.jpg');">
-        <div class="carousel-caption d-none d-md-block">
-          <h2>New Arrivals</h2>
-          <p>Discover the latest fashion trends</p>
-        </div>
-      </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#trendingSlider" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#trendingSlider" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
+    </footer>
   </div>
   
-  <!-- Dynamic Products Section -->
-  <div class="container py-5">
-    <h2 class="mb-4 text-center">Our Products</h2>
-    <div class="row g-4" id="productsContainer">
-      <!-- Product cards will be dynamically inserted here -->
-    </div>
-  </div>
-  
-  <!-- View Orders Section -->
-  <div class="view-orders container">
-    <a href="order-confirmation.html" class="btn btn-outline-warning">
-      View Your Orders &amp; Check Order Status
-    </a>
-  </div>
-  
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <p>&copy; 2025 Zelvara. All rights reserved.</p>
-    </div>
-  </footer>
-  
-  <!-- Firebase SDKs -->
-  <!-- Firebase App (the core Firebase SDK) -->
+  <!-- Firebase SDKs using Compat Libraries -->
   <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
- <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
- <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js">          </script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
 
-  
   <!-- Initialize Firebase -->
   <script>
-    // Replace these placeholder values with your actual Firebase project configuration.
+    // Your Firebase configuration (verify these values in your Firebase Console)
     const firebaseConfig = {
-  apiKey: "AIzaSyBGMqdsoSVs7JwM-zpPFDbErPKoJONH6rk",
-  authDomain: "zelvara.firebaseapp.com",
-  projectId: "zelvara",
-  storageBucket: "zelvara.firebasestorage.app",
-  messagingSenderId: "818365516027",
-  appId: "1:818365516027:web:9d05f2c2d61279595e485e",
-  measurementId: "G-MZMGYTCVJ3"
-};
-    
+      apiKey: "AIzaSyBGMqdsoSVs7JwM-zpPFDbErPKoJONH6rk",
+      authDomain: "zelvara.firebaseapp.com",
+      projectId: "zelvara",
+      storageBucket: "zelvara.firebasestorage.app",
+      messagingSenderId: "818365516027",
+      appId: "1:818365516027:web:9d05f2c2d61279595e485e",
+      measurementId: "G-MZMGYTCVJ3"
+    };
+
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     
     // Initialize Firebase services
     const auth = firebase.auth();
     const db = firebase.firestore();
+  </script>
+
+  <!-- Auth Guard: Check if the user is authenticated -->
+  <script>
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in – display the main content
+        document.getElementById("main-content").style.display = "block";
+        console.log("User is authenticated:", user);
+      } else {
+        // No user is signed in – redirect to the authentication page
+        console.warn("No user signed in – redirecting to auth page.");
+        window.location.href = "auth.html";
+      }
+    });
   </script>
   
   <!-- Bootstrap JS Bundle -->
@@ -268,5 +290,3 @@
   </script>
 </body>
 </html>
-
-
