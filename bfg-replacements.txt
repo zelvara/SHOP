@@ -1,0 +1,1 @@
+regex:-----BEGIN PRIVATE KEY-----[\s\S]*?-----END PRIVATE KEY-----==>***REMOVED***
