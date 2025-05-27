@@ -1,22 +1,20 @@
-// Import Firebase modules
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-
-// Your Firebase project configuration (replace with actual values)
+// firebase.js
+// Replace the placeholder values with your actual Firebase configuration details.
 const firebaseConfig = {
-  apiKey: "YOUR_FIREBASE_API_KEY",
-  authDomain: "YOUR_FIREBASE_PROJECT.firebaseapp.com",
-  projectId: "YOUR_FIREBASE_PROJECT_ID",
-  storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBGMqdsoSVs7JwM-zpPFDbErPKoJONH6rk",
+  authDomain: "zelvara.firebaseapp.com",
+  projectId: "zelvara",
+  storageBucket: "zelvara.firebasestorage.app",
+  messagingSenderId: "818365516027",
+  appId: "1:818365516027:web:9d05f2c2d61279595e485e"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+// Initialize Firebase using the global “firebase” object provided by the CDN.
+firebase.initializeApp(firebaseConfig);
 
-// Export authentication and database for other files
-export { auth, db };
+// Create instances of Auth and Firestore, then expose them globally for use in other scripts.
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+window.auth = auth;
+window.db = db;

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Initialize Firestore Collections</title>
+  <!-- Firebase SDKs: App and Firestore (compat version) -->
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
+  <!-- Include your Firebase initialization file (firebase.js) -->
+  <script src="js/firebase.js"></script>
+</head>
+<body>
+  <h1>Initializing Firestore Collections...</h1>
+  <script>
+    // Initialize a dummy document in the "products" collection.
+    firebase.firestore().collection("products").add({
+      name: "Sample Product",
+      description: "This is a sample product for initialization.",
+      price: 0,
+      category: "sample",
+      imageURLs: [],
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      stock: 0
+    }).then(docRef => {
+      console.log("Initialized 'products' collection with document ID:", docRef.id);
+    }).catch(error => {
+      console.error("Error initializing 'products' collection:", error);
+    });
+
+    // Initialize a dummy document in the "orders" collection.
+    firebase.firestore().collection("orders").add({
+      userId: "dummy",
+      orderedItems: [
+        {
+          productId: "dummy",
+          name: "Dummy Order",
+          quantity: 0,
+          size: "N/A",
+          price: 0,
+          imageURL: ""
+        }
+      ],
+      subtotal: 0,
+      discount: 0,
+      total: 0,
+      shippingAddress: {
+        name: "",
+        address: "",
+        city: "",
+        pincode: ""
+      },
+      orderStatus: "Pending",
+      orderDate: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(docRef => {
+      console.log("Initialized 'orders' collection with document ID:", docRef.id);
+    }).catch(error => {
+      console.error("Error initializing 'orders' collection:", error);
+    });
+
+    // Initialize a dummy document in the "users" collection.
+    firebase.firestore().collection("users").add({
+      name: "Dummy User",
+      email: "dummy@example.com",
+      phoneNumber: "",
+      address: {
+        street: "",
+        city: "",
+        pincode: ""
+      }
+    }).then(docRef => {
+      console.log("Initialized 'users' collection with document ID:", docRef.id);
+    }).catch(error => {
+      console.error("Error initializing 'users' collection:", error);
+    });
+
+    // Initialize a dummy document in the "carts" collection.
+    firebase.firestore().collection("carts").add({
+      sessionId: "dummySession",
+      items: []
+    }).then(docRef => {
+      console.log("Initialized 'carts' collection with document ID:", docRef.id);
+    }).catch(error => {
+      console.error("Error initializing 'carts' collection:", error);
+    });
+  </script>
+</body>
+</html>
