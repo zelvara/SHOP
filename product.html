@@ -1,201 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Product Details - Zelvara</title>
-  <!-- Bootstrap CSS (v5.3.0) -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <style>
-    body {
-      background-color: #f8f9fa;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    .product-container {
-      margin-top: 30px;
-      background-color: #ffffff;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
-    }
-    .carousel-item img {
-      width: 100%;
-      object-fit: contain;
-      max-height: 500px;
-    }
-    .price {
-      font-size: 28px;
-      font-weight: bold;
-      color: #d9534f;
-    }
-    .size-options .btn {
-      margin-right: 10px;
-      margin-bottom: 10px;
-    }
-    .pincode-check input {
-      max-width: 150px;
-      margin-right: 10px;
-    }
-    .product-description {
-      line-height: 1.6;
-    }
-    .btn-add-to-cart {
-      background-color: #f0ad4e;
-      border: none;
-    }
-  </style>
-</head>
-<body>
-  <div class="container product-container">
-    <div class="row">
-      <!-- Left Column: Image Carousel -->
-      <div class="col-lg-6 mb-4">
-        <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner" id="carouselInner">
-            <!-- Carousel items will be injected here -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Product Details - Zelvara</title>
+    <!-- Bootstrap CSS (v5.3.0) -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', sans-serif;
+      }
+      .product-container {
+        margin-top: 30px;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+      }
+      .carousel-item img {
+        width: 100%;
+        object-fit: contain;
+        max-height: 500px;
+      }
+      .price {
+        font-size: 28px;
+        font-weight: bold;
+        color: #d9534f;
+      }
+      .size-options .btn {
+        margin-right: 10px;
+        margin-bottom: 10px;
+      }
+      .pincode-check input {
+        max-width: 150px;
+        margin-right: 10px;
+      }
+      .product-description {
+        line-height: 1.6;
+      }
+      .btn-add-to-cart {
+        background-color: #f0ad4e;
+        border: none;
+      }
+    </style>
+    <!-- Firebase SDKs: load core, auth, & firestore BEFORE your custom scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
+    <!-- Firebase Initialization -->
+    <script src="js/firebase.js"></script>  
+  </head>
+  <body>
+    <div class="container product-container">
+      <div class="row">
+        <!-- Left Column: Image Carousel -->
+        <div class="col-lg-6 mb-4">
+          <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner" id="carouselInner">
+              <!-- Carousel items will be injected here -->
+            </div>
+            <button
+              class="carousel-control-prev"
+              type="button"
+              data-bs-target="#productCarousel"
+              data-bs-slide="prev"
+            >
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button
+              class="carousel-control-next"
+              type="button"
+              data-bs-target="#productCarousel"
+              data-bs-slide="next"
+            >
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
           </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
         </div>
-      </div>
-      <!-- Right Column: Product Details & Actions -->
-      <div class="col-lg-6">
-        <h2 id="productName"></h2>
-        <p id="productPrice" class="price my-3"></p>
-        <p id="productDescription" class="product-description"></p>
-        <hr>
-        <!-- Size Options -->
-        <div class="mb-3">
-          <h5>Select Size</h5>
-          <div class="size-options">
-            <button type="button" class="btn btn-outline-secondary size-btn" data-size="S">S</button>
-            <button type="button" class="btn btn-outline-secondary size-btn" data-size="M">M</button>
-            <button type="button" class="btn btn-outline-secondary size-btn" data-size="L">L</button>
-            <button type="button" class="btn btn-outline-secondary size-btn" data-size="XL">XL</button>
+        <!-- Right Column: Product Details & Actions -->
+        <div class="col-lg-6">
+          <h2 id="productName"></h2>
+          <p id="productPrice" class="price my-3"></p>
+          <p id="productDescription" class="product-description"></p>
+          <hr />
+          <!-- Size Options -->
+          <div class="mb-3">
+            <h5>Select Size</h5>
+            <div class="size-options">
+              <button type="button" class="btn btn-outline-secondary size-btn" data-size="S">S</button>
+              <button type="button" class="btn btn-outline-secondary size-btn" data-size="M">M</button>
+              <button type="button" class="btn btn-outline-secondary size-btn" data-size="L">L</button>
+              <button type="button" class="btn btn-outline-secondary size-btn" data-size="XL">XL</button>
+            </div>
           </div>
-        </div>
-        <!-- Quantity -->
-        <div class="mb-3">
-          <h5>Quantity</h5>
-          <input type="number" id="quantity" class="form-control" value="1" min="1" style="max-width:120px;">
-        </div>
-        <!-- Action Buttons -->
-        <div class="mb-3">
-          <button id="addToCartBtn" class="btn btn-warning btn-add-to-cart me-2">Add To Cart</button>
-          <button id="buyNowBtn" class="btn btn-success">Buy Now</button>
-        </div>
-        <!-- Pincode Check -->
-        <div class="mb-3 pincode-check">
-          <h5>Check Delivery</h5>
-          <div class="d-flex align-items-center">
-            <input type="text" id="pincodeInput" class="form-control" placeholder="Enter Pincode" maxlength="6">
-            <button id="checkPincodeBtn" class="btn btn-info ms-2">Check</button>
+          <!-- Quantity -->
+          <div class="mb-3">
+            <h5>Quantity</h5>
+            <input type="number" id="quantity" class="form-control" value="1" min="1" style="max-width:120px;" />
           </div>
-          <div id="pincodeMessage" class="mt-2"></div>
+          <!-- Action Buttons -->
+          <div class="mb-3">
+            <button id="addToCartBtn" class="btn btn-warning btn-add-to-cart me-2">Add To Cart</button>
+            <button id="buyNowBtn" class="btn btn-success">Buy Now</button>
+          </div>
+          <!-- Pincode Check -->
+          <div class="mb-3 pincode-check">
+            <h5>Check Delivery</h5>
+            <div class="d-flex align-items-center">
+              <input type="text" id="pincodeInput" class="form-control" placeholder="Enter Pincode" maxlength="6" />
+              <button id="checkPincodeBtn" class="btn btn-info ms-2">Check</button>
+            </div>
+            <div id="pincodeMessage" class="mt-2"></div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Firebase SDKs (for Firestore) -->
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
-  <!-- Firebase Initialization -->
-  <script src="js/firebase.js"></script>
-  <script>
-    // Utility: Retrieve query parameter by name
-    function getQueryParam(param) {
-      const params = new URLSearchParams(window.location.search);
-      return params.get(param);
-    }
-
-    const productId = getQueryParam('id');
-    let selectedSize = null;
-
-    if (productId) {
-      firebase.firestore().collection("products").doc(productId).get()
-      .then(doc => {
-        if (doc.exists) {
-          const product = doc.data();
-          document.getElementById("productName").innerText = product.name;
-          document.getElementById("productPrice").innerText = "₹" + product.price;
-          document.getElementById("productDescription").innerText = product.description;
-
-          // Populate carousel with images
-          const carouselInner = document.getElementById("carouselInner");
-          product.imageURLs.forEach((url, index) => {
-            const carouselItem = document.createElement("div");
-            carouselItem.className = "carousel-item" + (index === 0 ? " active" : "");
-            carouselItem.innerHTML = `<img src="${url}" alt="Product Image ${index + 1}" class="img-fluid">`;
-            carouselInner.appendChild(carouselItem);
-          });
-        } else {
-          document.querySelector(".product-container").innerHTML = "<h3>Product not found</h3>";
-        }
-      })
-      .catch(error => {
-        console.error("Error fetching product:", error);
-        document.querySelector(".product-container").innerHTML = "<h3>Error loading product details.</h3>";
-      });
-    } else {
-      document.querySelector(".product-container").innerHTML = "<h3>Invalid product ID.</h3>";
-    }
-
-    // Size selection handling
-    document.querySelectorAll(".size-btn").forEach(btn => {
-      btn.addEventListener("click", function() {
-        document.querySelectorAll(".size-btn").forEach(b => b.classList.remove("active"));
-        this.classList.add("active");
-        selectedSize = this.getAttribute("data-size");
-      });
-    });
-
-    // Add to Cart button handler
-    document.getElementById("addToCartBtn").addEventListener("click", function() {
-      const quantity = document.getElementById("quantity").value;
-      if (!selectedSize) {
-        alert("Please select a size.");
-        return;
+    <!-- Custom Script for Product Details, Auth Check, & Actions -->
+    <script>
+      "use strict";
+      
+      // Utility function: Get query parameter from the URL
+      function getQueryParam(param) {
+        const params = new URLSearchParams(window.location.search);
+        return params.get(param);
       }
-      // Here you would normally add the product to a cart (this example just alerts)
-      alert("Added to cart:\nProduct ID: " + productId + "\nSize: " + selectedSize + "\nQuantity: " + quantity);
-    });
-
-    // Buy Now button handler
-    document.getElementById("buyNowBtn").addEventListener("click", function() {
-      const quantity = document.getElementById("quantity").value;
-      if (!selectedSize) {
-        alert("Please select a size.");
-        return;
-      }
-      // Replace this with your checkout redirection logic if needed.
-      alert("Proceeding to checkout:\nProduct ID: " + productId + "\nSize: " + selectedSize + "\nQuantity: " + quantity);
-    });
-
-    // Pincode check functionality
-    document.getElementById("checkPincodeBtn").addEventListener("click", function () {
-      const pincode = document.getElementById("pincodeInput").value.trim();
-      const messageDiv = document.getElementById("pincodeMessage");
-      // Dummy allowed pincodes for demonstration
-      const allowedPincodes = ["560001", "560002", "560003", "110001", "110002", "400001"];
-      if (pincode.match(/^\d{6}$/)) {
-        if (allowedPincodes.includes(pincode)) {
-          messageDiv.innerHTML = '<span class="text-success">Delivery available in your area.</span>';
-        } else {
-          messageDiv.innerHTML = '<span class="text-danger">Sorry, delivery is not available for this pincode.</span>';
+      
+      // Helper function to enforce authentication
+      function requireAuth(destination) {
+        if (!firebase.auth().currentUser) {
+          // If not signed in, redirect to auth page with the intended destination as a query parameter
+          window.location.href = "auth.html?redirect=" + encodeURIComponent(destination);
+          return false;
         }
+        return true;
+      }
+      
+      // Get the product ID from the query string
+      const productId = getQueryParam("id");
+      let selectedSize = null;
+      
+      if (productId) {
+        // Fetch product details from Firestore using the product ID
+        firebase.firestore().collection("products").doc(productId).get().then((doc) => {
+          if (doc.exists) {
+            const product = doc.data();
+            document.getElementById("productName").innerText = product.name;
+            document.getElementById("productPrice").innerText = "₹" + product.price;
+            document.getElementById("productDescription").innerText = product.description;
+            
+            // Populate carousel with product images
+            const carouselInner = document.getElementById("carouselInner");
+            product.imageURLs.forEach((url, index) => {
+              const carouselItem = document.createElement("div");
+              carouselItem.className = "carousel-item" + (index === 0 ? " active" : "");
+              carouselItem.innerHTML = `<img src="${url}" alt="Product Image ${index + 1}" class="img-fluid">`;
+              carouselInner.appendChild(carouselItem);
+            });
+          } else {
+            document.querySelector(".product-container").innerHTML = "<h3>Product not found</h3>";
+          }
+        }).catch((error) => {
+          console.error("Error fetching product:", error);
+          document.querySelector(".product-container").innerHTML = "<h3>Error loading product details.</h3>";
+        });
       } else {
-        messageDiv.innerHTML = '<span class="text-warning">Please enter a valid 6-digit pincode.</span>';
+        document.querySelector(".product-container").innerHTML = "<h3>Invalid product ID.</h3>";
       }
-    });
-  </script>
-  <!-- Bootstrap JS Bundle (includes Popper) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+      
+      // Handle size selection
+      document.querySelectorAll(".size-btn").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".size-btn").forEach((b) => b.classList.remove("active"));
+          this.classList.add("active");
+          selectedSize = this.getAttribute("data-size");
+        });
+      });
+      
+      // "Add To Cart" button handler with auth check
+      document.getElementById("addToCartBtn").addEventListener("click", function () {
+        const quantity = document.getElementById("quantity").value;
+        if (!selectedSize) {
+          alert("Please select a size.");
+          return;
+        }
+        // If the user is not authenticated, force them to sign in before proceeding.
+        if (!requireAuth("cart.html")) {
+          return;
+        }
+        // If authenticated, continue with the add-to-cart logic.
+        alert("Added to cart:\nProduct ID: " + productId + "\nSize: " + selectedSize + "\nQuantity: " + quantity);
+      });
+      
+      // "Buy Now" button handler with auth check:
+      document.getElementById("buyNowBtn").addEventListener("click", function () {
+        const quantity = document.getElementById("quantity").value;
+        if (!selectedSize) {
+          alert("Please select a size.");
+          return;
+        }
+        // If the user is not authenticated, force them to sign in before continuing.
+        if (!requireAuth("checkout.html")) {
+          return;
+        }
+        // Retrieve dynamic product details from the page
+        const productName = document.getElementById("productName").innerText;
+        const productPriceText = document.getElementById("productPrice").innerText; // e.g., "₹1999"
+        const productPrice = productPriceText.replace("₹", "").trim();
+        
+        // Store product details, including quantity, in localStorage
+        localStorage.setItem("productName", productName);
+        localStorage.setItem("productSize", selectedSize);
+        localStorage.setItem("productPrice", productPrice);
+        localStorage.setItem("productQuantity", quantity);
+        
+        // Redirect to checkout page
+        window.location.href = "checkout.html";
+      });
+      
+      // Pincode check functionality remains the same
+      document.getElementById("checkPincodeBtn").addEventListener("click", function () {
+        const pincode = document.getElementById("pincodeInput").value.trim();
+        const messageDiv = document.getElementById("pincodeMessage");
+        // Dummy allowed pincodes for demonstration
+        const allowedPincodes = ["560001", "560002", "560003", "110001", "110002", "400001"];
+        if (/^\d{6}$/.test(pincode)) {
+          if (allowedPincodes.includes(pincode)) {
+            messageDiv.innerHTML = '<span class="text-success">Delivery available in your area.</span>';
+          } else {
+            messageDiv.innerHTML = '<span class="text-danger">Sorry, delivery is not available for this pincode.</span>';
+          }
+        } else {
+          messageDiv.innerHTML = '<span class="text-warning">Please enter a valid 6-digit pincode.</span>';
+        }
+      });
+    </script>
+    
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>
+
+

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cloudinary Test</title>
+</head>
+<body>
+  <button id="upload_widget">Upload Image</button>
+  <div id="upload_status"></div>
+  <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
+  <script>
+    var myWidget = cloudinary.createUploadWidget(
+      {
+        cloudName: "my_actual_cloud_name",  // Replace with your cloud name
+        uploadPreset: "unsigned_preset"       // Replace with your unsigned preset
+      },
+      (error, result) => {
+        if (!error && result && result.event === "success") {
+          console.log("Upload successful:", result.info);
+          document.getElementById("upload_status").innerText = "Uploaded: " + result.info.secure_url;
+        } else if (error) {
+          console.error("Upload error:", error);
+        }
+      }
+    );
+    document.getElementById("upload_widget").addEventListener("click", function () {
+      myWidget.open();
+    }, false);
+  </script>
+</body>
+</html>
