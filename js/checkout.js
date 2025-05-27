@@ -22,7 +22,15 @@ document.getElementById("payNowBtn").addEventListener("click", function () {
   const productQuantity = parseInt(localStorage.getItem("productQuantity")) || 1;
   const totalPrice = productPrice * productQuantity;
   
-  // Create an order object with dynamic product & shipping details
+  // Make sure user is authenticated
+  const currentUser = firebase.auth().currentUser;
+  if (!currentUser) {
+    alert("Please sign in first.");
+    window.location.href = "auth.html?redirect=checkout.html";
+    return;
+  }
+  
+  // Create an order object with dynamic product & shipping details and attach user's UID.
   const order = {
     customerName: fullName,
     address: address,
@@ -36,6 +44,7 @@ document.getElementById("payNowBtn").addEventListener("click", function () {
     quantity: productQuantity,
     totalPrice: totalPrice,
     status: "Pending Payment",
+    uid: currentUser.uid,  // This line tags the order with the user's unique ID
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
   };
   
@@ -50,3 +59,4 @@ document.getElementById("payNowBtn").addEventListener("click", function () {
       alert("Error creating order, please try again.");
     });
 });
+
