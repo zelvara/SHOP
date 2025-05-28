@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Shopping Cart</title>
-  <!-- Optional: Link an external CSS file -->
+  <!-- Optional: Link to an external CSS file -->
   <style>
-    /* Minimal styling for demonstration */
+    /* Minimal, professional styling */
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
       background: #f9f9f9;
+      padding: 20px;
     }
     header, main {
       max-width: 800px;
       margin: auto;
       background: #fff;
       padding: 20px;
+      margin-bottom: 20px;
       box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
     }
@@ -47,25 +48,35 @@
       padding: 5px 10px;
       margin: 2px;
       cursor: pointer;
+      border: none;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 4px;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
     #cartSummary {
       text-align: right;
-      margin-top: 10px;
     }
-    @media (max-width: 600px) {
-      table, th, td {
-        font-size: 14px;
-      }
+    #addSampleContainer {
+      text-align: center;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
-
   <header>
     <h1>Your Shopping Cart</h1>
   </header>
-  
+
   <main>
+    <!-- Sample Add To Cart Button (for demo/testing only) -->
+    <div id="addSampleContainer">
+      <button id="addSampleProductBtn">Add Sample Product to Cart</button>
+    </div>
+
     <section id="cartContainer">
       <table id="cartTable">
         <thead>
@@ -95,7 +106,7 @@
   
   <!-- Your Firebase configuration -->
   <script>
-    // Replace the config object with your actual Firebase project configuration.
+    // Replace the values below with your actual Firebase configuration
     var firebaseConfig = {
       apiKey: "YOUR_API_KEY",
       authDomain: "YOUR_AUTH_DOMAIN",
