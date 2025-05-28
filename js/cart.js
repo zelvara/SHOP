@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
       window.location.href = "auth.html?redirect=cart.html";
       return;
     }
+    console.log("Cart loaded for user:", user.uid);
     loadCartItems(user);
   });
 
@@ -16,8 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.href = "checkout.html";
   });
 
-  // Sample Add To Cart button for demonstration purposes.
-  // In production, the addToCart function is typically triggered from a product details page.
+  // Sample Add To Cart button for demonstration.
   document
     .getElementById("addSampleProductBtn")
     .addEventListener("click", function () {
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
         id: "prod_001",
         name: "Example Product",
         price: 499.99,
-        imageUrl: "https://via.placeholder.com/50" // Replace with your product image URL
+        imageUrl: "https://via.placeholder.com/50" // Sample image URL
       };
       addToCart(sampleProduct);
     });
@@ -33,9 +33,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 /**
  * Adds a product to the cart.
- * If the product already exists (based on product id), it increments the quantity.
- * Otherwise, it creates a new document in the "carts" collection.
- * @param {Object} product - The product details.
  */
 function addToCart(product) {
   firebase.auth().onAuthStateChanged(function (user) {
@@ -44,6 +41,7 @@ function addToCart(product) {
       window.location.href = "auth.html?redirect=cart.html";
       return;
     }
+    console.log("Adding to cart for user:", user.uid);
 
     const cartRef = firebase.firestore().collection("carts");
 
@@ -64,7 +62,8 @@ function addToCart(product) {
               quantity: 1,
               imageUrl: product.imageUrl || "default-product.png"
             })
-            .then(function () {
+            .then(function (docRef) {
+              console.log("Product added with doc ID:", docRef.id);
               alert("Product added to cart!");
               loadCartItems(user);
             })
@@ -81,6 +80,7 @@ function addToCart(product) {
                 quantity: currentQty + 1
               })
               .then(function () {
+                console.log("Cart updated for product:", product.id);
                 alert("Cart updated!");
                 loadCartItems(user);
               })
@@ -100,14 +100,6 @@ function addToCart(product) {
 
 /**
  * Load the cart items for the current user.
- * Data is read from the "carts" collection in Firestore.
- * Each document should contain:
- *   - uid: the user's id
- *   - productId: product's identifier
- *   - productName: title/name of product
- *   - price: unit price
- *   - quantity: quantity in cart
- *   - imageUrl: (optional) URL to product image
  */
 function loadCartItems(user) {
   const cartItemsContainer = document.getElementById("cartItems");
@@ -120,13 +112,14 @@ function loadCartItems(user) {
     .where("uid", "==", user.uid)
     .get()
     .then(function (querySnapshot) {
+      console.log("Documents found:", querySnapshot.docs);
       if (querySnapshot.empty) {
         cartItemsContainer.innerHTML =
           '<tr><td colspan="5">Your cart is empty.</td></tr>';
         document.getElementById("cartTotal").innerText = "Total: ₹0.00";
         return;
       }
-
+      
       querySnapshot.forEach(function (doc) {
         const data = doc.data();
         const quantity = data.quantity || 1;
@@ -137,22 +130,14 @@ function loadCartItems(user) {
         cartItemsContainer.innerHTML += `
           <tr id="cart-item-${doc.id}">
             <td>
-              <img src="${
-                data.imageUrl ? data.imageUrl : "default-product.png"
-              }" alt="${data.productName}" />
+              <img src="${data.imageUrl ? data.imageUrl : "default-product.png"}" alt="${data.productName}" />
               <span>${data.productName || "Unnamed Product"}</span>
             </td>
             <td>₹${price.toFixed(2)}</td>
             <td>
-              <button onclick="updateQuantity('${
-                doc.id
-              }', ${quantity - 1})" ${
-          quantity <= 1 ? "disabled" : ""
-        }>–</button>
+              <button onclick="updateQuantity('${doc.id}', ${quantity - 1})" ${quantity <= 1 ? "disabled" : ""}>–</button>
               <span id="quantity-${doc.id}">${quantity}</span>
-              <button onclick="updateQuantity('${
-                doc.id
-              }', ${quantity + 1})">+</button>
+              <button onclick="updateQuantity('${doc.id}', ${quantity + 1})">+</button>
             </td>
             <td>₹${itemTotal.toFixed(2)}</td>
             <td>
@@ -172,8 +157,6 @@ function loadCartItems(user) {
 
 /**
  * Updates the quantity of an item in Firestore.
- * @param {string} docId - The Firestore document ID for the cart item.
- * @param {number} newQuantity - The new quantity value.
  */
 function updateQuantity(docId, newQuantity) {
   if (newQuantity < 1) return; // Prevent quantity from going below 1
@@ -185,7 +168,9 @@ function updateQuantity(docId, newQuantity) {
     .update({ quantity: newQuantity })
     .then(function () {
       firebase.auth().onAuthStateChanged(function (user) {
-        if (user) loadCartItems(user);
+        if (user) {
+          loadCartItems(user);
+        }
       });
     })
     .catch(function (error) {
@@ -195,8 +180,7 @@ function updateQuantity(docId, newQuantity) {
 }
 
 /**
- * Removes an item from the cart in Firestore.
- * @param {string} docId - The Firestore document ID for the cart item.
+ * Removes an item from the cart.
  */
 function removeCartItem(docId) {
   if (confirm("Are you sure you want to remove this item from your cart?")) {
@@ -207,7 +191,9 @@ function removeCartItem(docId) {
       .delete()
       .then(function () {
         firebase.auth().onAuthStateChanged(function (user) {
-          if (user) loadCartItems(user);
+          if (user) {
+            loadCartItems(user);
+          }
         });
       })
       .catch(function (error) {
