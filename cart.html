@@ -4,65 +4,63 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Shopping Cart</title>
-  <!-- Optional: Link to an external CSS file -->
   <style>
-    /* Minimal, professional styling */
+    /* A clean, professional style */
     body {
       font-family: Arial, sans-serif;
       background: #f9f9f9;
       padding: 20px;
+      margin: 0;
     }
     header, main {
-      max-width: 800px;
+      max-width: 900px;
       margin: auto;
       background: #fff;
       padding: 20px;
       margin-bottom: 20px;
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
       border-radius: 8px;
     }
-    h1, h2 {
+    header h1 {
       text-align: center;
-      margin: 10px 0;
+      margin: 0;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 20px;
+      margin-top: 20px;
     }
     th, td {
       border: 1px solid #ddd;
-      padding: 10px;
+      padding: 12px;
       text-align: center;
     }
     th {
-      background-color: #f4f4f4;
+      background-color: #f2f2f2;
     }
     img {
-      max-width: 50px;
+      width: 50px;
       height: auto;
       vertical-align: middle;
-      margin-right: 10px;
+      margin-right: 8px;
     }
     button {
-      padding: 5px 10px;
-      margin: 2px;
-      cursor: pointer;
-      border: none;
+      padding: 6px 10px;
       background-color: #007bff;
+      border: none;
       color: #fff;
       border-radius: 4px;
+      cursor: pointer;
+      margin: 0 2px;
     }
     button:disabled {
-      opacity: 0.6;
+      background-color: #aaa;
       cursor: not-allowed;
     }
     #cartSummary {
+      margin-top: 20px;
       text-align: right;
-    }
-    #addSampleContainer {
-      text-align: center;
-      margin-bottom: 20px;
+      font-size: 18px;
     }
   </style>
 </head>
@@ -70,35 +68,28 @@
   <header>
     <h1>Your Shopping Cart</h1>
   </header>
-
+  
   <main>
-    <!-- Sample Add To Cart Button (for demo/testing only) -->
-    <div id="addSampleContainer">
-      <button id="addSampleProductBtn">Add Sample Product to Cart</button>
-    </div>
-
-    <section id="cartContainer">
-      <table id="cartTable">
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Price</th>
-            <th style="width: 150px;">Quantity</th>
-            <th>Total</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="cartItems">
-          <!-- Cart items will be dynamically loaded here -->
-        </tbody>
-      </table>
-    </section>
-    <section id="cartSummary">
+    <table id="cartTable">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Total</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="cartItems">
+        <!-- Cart items will be dynamically loaded here -->
+      </tbody>
+    </table>
+    <div id="cartSummary">
       <h2 id="cartTotal">Total: ₹0.00</h2>
       <button id="checkoutBtn">Proceed to Checkout</button>
-    </section>
+    </div>
   </main>
-
+  
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -106,8 +97,8 @@
   
   <!-- Your Firebase configuration -->
   <script>
-    // Replace the values below with your actual Firebase configuration
-    var firebaseConfig = {
+    // Replace these with your actual Firebase project settings
+    const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
       authDomain: "YOUR_AUTH_DOMAIN",
       projectId: "YOUR_PROJECT_ID",
@@ -119,7 +110,7 @@
     firebase.initializeApp(firebaseConfig);
   </script>
   
-  <!-- Cart JavaScript code -->
+  <!-- Cart Page JavaScript -->
   <script src="cart.js"></script>
 </body>
 </html>
