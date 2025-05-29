@@ -136,7 +136,7 @@
             // Create a product card element
             const colDiv = document.createElement('div');
             colDiv.className = "col-md-4 mb-4";
-            colDiv.innerHTML = `
+            colDiv.innerHTML = 
               <div class="card product-card" data-id="${docId}">
                 <div class="img-container">
                   <img src="${imageUrl}" alt="${product.name}">
@@ -146,7 +146,7 @@
                   <p class="card-text">₹${product.price}</p>
                 </div>
               </div>
-            `;
+            ;
             // Add click event to navigate to the product details page
             colDiv.addEventListener('click', function () {
               window.location.href = 'product.html?id=' + docId;
@@ -208,4 +208,3 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
-
